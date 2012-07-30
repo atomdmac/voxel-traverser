@@ -4,10 +4,21 @@
 	<title>Voxel Traversal</title>
 	
 	<script src="../js/jquery.js"></script>
-	<script src="main.js"></script>
+	<script src="../lib/vector2d/vector2d.js"></script>
+	<script src="Map.js"></script>
+	<script src="Traverser.js"></script>
 	<script>
 		$().ready(function() {
-			// TODO
+			var container = "#draw-area";
+			var cols = 10;
+			var rows = 10;
+			var cellsize = 50;
+		
+			M = new Map(container, cols, rows, cellsize);
+			T = new Traverser(container, cols, rows, cellsize, M);
+			
+			M.draw();
+			T.update();
 		});
 	</script>
 </head>

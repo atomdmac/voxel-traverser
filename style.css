@@ -1,0 +1,14 @@
+.cell {
+    position: absolute;
+    border: 1px solid black;
+    background: green;
+}
+.highlight {
+    position: absolute;
+    border: 1px solid black;
+    background: red;
+}
+
+.collidable {
+    background: gray;
+}

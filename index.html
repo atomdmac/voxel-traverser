@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/dda.js"></script>
+    <script src="js/mouse-input.js"></script>
+    
+    <script>
+    $().ready(function () {
+        /**
+        * Build and draw the map.
+        */
+        
+        function randomInt(min, max) {
+            return Math.round(((max - min) * Math.random()) + min);
+        }
+        
+        function collideChance() {
+            var rand = randomInt(0, 100);
+            console.log(rand);
+            if (rand < 10) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        function buildMap(container, w, h, cellsize) {
+            var map = new Map(w, h, cellsize);
+            for (var x = 0; x < w; x++) {
+                for (var y = 0; y < h; y++) {
+                    var xpos = x * cellsize;
+                    var ypos = y * cellsize;
+                    var newcell = $("<div class='cell'></div>").appendTo(container);
+                    newcell.css({
+                        left: xpos,
+                        top: ypos,
+                        width: cellsize,
+                        height: cellsize
+                    });
+                    
+                    // Create an object to store cell information in.
+                    var cellinfo = {
+                        el: newcell,
+                        collidable: collideChance()
+                    }
+                    
+                    console.log("Collidable (", xpos, ", ", ypos, "): ", cellinfo.collidable);
+                    
+                    if (cellinfo.collidable) {
+                        newcell.addClass("collidable");
+                    }
+                    
+                    // Add the new cell information to the map.
+                    map.tile(x, y, cellinfo);
+                }
+            }
+            
+            // !!! DEBUG !!! //
+            console.log("20px, 20px == ", map.pos2cell(20, 20));
+            console.log("10, 10 == ", map.cell2pos(10, 10));
+            console.log("map.tile(5, 5) == ", map.tile(5, 5));
+            
+            return map;
+        }
+        
+        function highlightCells(container, cells, cellsize) {
+            // Clear any previously drawn paths.
+            $(".highlight").remove();
+            
+            // Draw new path.
+            var len = cells.length;
+            for (var i=0; i<len; i++) {
+                var c = cells[i];
+                var xpos = c.x * cellsize;
+                var ypos = c.y * cellsize;
+                var newcell = $("<div class='highlight'></div>").appendTo(container);
+                newcell.css({
+                    left: xpos,
+                    top: ypos,
+                    width: cellsize,
+                    height: cellsize
+                });
+            }
+        }
+        
+        // Settings
+        var cellsize = 20;
+        var mapWidth = 10;
+        var mapHeight = 10;
+        
+        // Get crackin'!
+        var map = buildMap($("#map-container"), mapWidth, mapHeight, cellsize);
+        var dda = new DDA(20, 20);
+        var mi = new MouseInput($("#map-container"));
+        mi.listen(function(x1, y1, x2, y2) {
+            var cells = dda.run(x1, y1, x2, y2, map);
+            highlightCells($("#map-container"), cells, cellsize);
+        });
+    });
+    </script>
+</head>
+<body>
+    <div id="path-overlay"></div>
+    <div id="map-container"></div>
+</body>
+</html>

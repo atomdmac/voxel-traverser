@@ -7,11 +7,12 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     
     <!-- Scripts -->
-    <script src="js/utils.js"></script>
+    <script src="js/randomutils/utils.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/map.js"></script>
     <script src="js/dda.js"></script>
     <script src="js/mouse-input.js"></script>
+    <script src="js/map-renderer.js"></script>
     
     <script>
     $().ready(function () {
@@ -24,8 +25,7 @@
         }
         
         function collideChance() {
-            var rand = randomInt(0, 100);
-            console.log(rand);
+            var rand = Math.randomInt(0, 100);
             if (rand < 10) {
                 return true;
             } else {
@@ -47,27 +47,27 @@
                         height: cellsize
                     });
                     
+                    var cellTypes = [
+                        "passable",
+                    ];
+                    
+                    var type = cellTypes.random();
+                    
                     // Create an object to store cell information in.
                     var cellinfo = {
-                        el: newcell,
-                        collidable: collideChance()
+                        "el": newcell,
+                        "type": cellTypes.random()
                     }
                     
-                    console.log("Collidable (", xpos, ", ", ypos, "): ", cellinfo.collidable);
-                    
-                    if (cellinfo.collidable) {
-                        newcell.addClass("collidable");
+                    // HACK;
+                    if (collideChance()) {
+                        cellinfo.type = "collidable";
                     }
                     
                     // Add the new cell information to the map.
                     map.tile(x, y, cellinfo);
                 }
             }
-            
-            // !!! DEBUG !!! //
-            console.log("20px, 20px == ", map.pos2cell(20, 20));
-            console.log("10, 10 == ", map.cell2pos(10, 10));
-            console.log("map.tile(5, 5) == ", map.tile(5, 5));
             
             return map;
         }
@@ -98,18 +98,23 @@
         var mapHeight = 10;
         
         // Get crackin'!
+        var canvas = document.createElement("canvas");
+            canvas.id = "stage";
+            canvas.width = Number(cellsize * mapWidth);
+            canvas.height = Number( cellsize * mapHeight);
+            $("body").append(canvas);
         var map = buildMap($("#map-container"), mapWidth, mapHeight, cellsize);
         var dda = new DDA(20, 20);
-        var mi = new MouseInput($("#map-container"));
+        var mi = new MouseInput($("#stage"));
+        var renderer = new MapRenderer(canvas, map);
         mi.listen(function(x1, y1, x2, y2) {
             var cells = dda.run(x1, y1, x2, y2, map);
-            highlightCells($("#map-container"), cells, cellsize);
+            renderer.update(x1, y1, x2, y2, cells);
         });
     });
     </script>
 </head>
 <body>
-    <div id="path-overlay"></div>
-    <div id="map-container"></div>
+    
 </body>
 </html>

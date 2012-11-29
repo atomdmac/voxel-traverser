@@ -64,7 +64,8 @@ var DDA = function(cellSizeX, cellSizeY) {
             else {
                 cellList.push({
                     "x": gridPosX,
-                    "y": gridPosY
+                    "y": gridPosY,
+                    "type": "path"
                 });
             }
         }

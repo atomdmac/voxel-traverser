@@ -2,7 +2,7 @@
  * Map Object
  */
 Map = function(width, height, cellsize) {
-    var width, height, cellsize, mapArray;
+    var mapArray;
 
 /*
      * Convert screen/pixel coordinates to cell coordinates.
@@ -51,7 +51,7 @@ Map = function(width, height, cellsize) {
     }
 
     function isCollidable(x, y) {
-        return mapArray[x][y].collidable;
+        return mapArray[x][y].type === "collidable";
     }
     
     function inBounds(x, y) {
@@ -79,22 +79,25 @@ Map = function(width, height, cellsize) {
     // Do init.
     initMap(width, height);
     
-    // Define getters / setters.
-    this.__defineGetter("width", function () {
-        return width;
-    });
-    this.__defineGetter("height", function () {
-        return height;
-    });
-    this.__defineGetter("cellsize", function () {
-        return cellsize;
-    });
-    
-    // Return public interface.
-    return {
+    // Define public interface.
+    var _public = {
         "tile": tile,
         "isCollidable": isCollidable,
         "cell2pos": cell2pos,
         "pos2cell": pos2cell
-    }
+    };
+    
+    // Define getters / setters.
+    _public.__defineGetter__("width", function () {
+        return width;
+    });
+    _public.__defineGetter__("height", function () {
+        return height;
+    });
+    _public.__defineGetter__("cellsize", function () {
+        return cellsize;
+    });
+    
+    // Return public interface.
+    return _public;
 }

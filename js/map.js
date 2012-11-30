@@ -9,11 +9,11 @@ Map = function(width, height, cellsize) {
      */
 
     function pos2cell(x, y) {
-        var cx = Math.floor(x / cellsize),
-            cy = Math.floor(y / cellsize);
+        var cx = Math.ceil(x / cellsize),
+            cy = Math.ceil(y / cellsize);
         return {
-            "x": cx,
-            "y": cy
+            "x": cx-1,
+            "y": cy-1
         };
     }
 
@@ -51,7 +51,12 @@ Map = function(width, height, cellsize) {
     }
 
     function isCollidable(x, y) {
-        return mapArray[x][y].type === "collidable";
+        try {
+            return mapArray[x][y].type === "collidable";
+        } catch (e) {
+            console.log("ERROR: ", e);
+            return false;
+        }
     }
     
     function inBounds(x, y) {

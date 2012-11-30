@@ -7,13 +7,13 @@ MouseInput = function(el) {
     $(el).click(function(e) {
         console.log(x1, " ", x2, e);
         if (x1 == null) {
-            x1 = e.clientX;
-            y1 = e.clientY;
+            x1 = e.offsetX;
+            y1 = e.offsetY;
             return;
         }
         else if (x2 == null) {
-            x2 = e.clientX;
-            y2 = e.clientY;
+            x2 = e.offsetX;
+            y2 = e.offsetY;
             if (listener != null) {
                 listener(x1, y1, x2, y2);
             }

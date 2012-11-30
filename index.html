@@ -90,8 +90,8 @@
         
         // Settings
         var cellsize = 20;
-        var mapWidth = 10;
-        var mapHeight = 10;
+        var mapWidth = 20;
+        var mapHeight = 20;
         
         // Get crackin'!
         var canvas = document.createElement("canvas");
@@ -100,7 +100,7 @@
             canvas.height = Number( cellsize * mapHeight);
             $("body").append(canvas);
         var map = buildMap($("#map-container"), mapWidth, mapHeight, cellsize);
-        var dda = new DDA(20, 20);
+        var dda = new DDA(mapWidth, mapHeight);
         var mi = new MouseInput($("#stage"));
         var renderer = new MapRenderer(canvas, map);
         mi.listen(function(x1, y1, x2, y2) {
